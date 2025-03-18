@@ -1,3 +1,7 @@
+mod internal;
+mod spec;
+
+use crate::internal::common::error_and_exit;
 use clap::{Arg, Command};
 
 fn main() {
@@ -72,6 +76,6 @@ fn main() {
             let id = sub_m.get_one::<String>("id").unwrap();
             println!("Fetching state of container {}", id);
         }
-        _ => {}
+        _ => error_and_exit(1, "container command unknown"),
     }
 }
