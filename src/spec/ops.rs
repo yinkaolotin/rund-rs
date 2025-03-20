@@ -36,3 +36,25 @@ impl FromStr for Operation {
         }
     }
 }
+
+pub struct State {
+    pub id: String,
+}
+
+pub struct Create {
+    pub id: String,
+    pub bundle: String,
+}
+
+pub struct Start {
+    pub id: String,
+}
+
+pub struct Kill {
+    pub id: String,
+    pub signal: i32,
+}
+
+pub struct Delete {
+    pub id: String,
+}
