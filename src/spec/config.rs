@@ -24,7 +24,7 @@ pub struct Spec {
     pub mounts: Option<Vec<Mount>>,
 
     /// Configures the container's root filesystem.
-    pub root: Root,
+    pub root: Option<Root>,
 
     /// Configures the container process.
     pub process: Option<Process>,
@@ -66,7 +66,7 @@ pub struct Hook {
     pub env: Option<Vec<String>>,
 
     /// the number of seconds before aborting the hook.
-    pub timeout: Option<u64>,
+    pub timeout: Option<i64>,
 }
 
 /// Specifies a mount for a container.
@@ -85,7 +85,9 @@ pub struct Mount {
     /// specifies the mount kind.
     #[serde(rename = "type")]
     pub mount_type: Option<String>,
-    // uidMappings and gidMappings
+    /*
+    other fields
+    */
 }
 
 /// Contains information about the container's root filesystem on the host.
@@ -116,7 +118,7 @@ pub struct Process {
     pub terminal: Option<bool>,
 
     /// Specifies user information for the process.
-    pub user: Option<User>,
+    pub user: User,
 
     /// Linux capabilities that are kept for the process.
     pub capabilities: Option<Capabilities>,
@@ -250,9 +252,9 @@ pub struct Linux {
 pub struct Device {
     /// Path to the device.
     pub path: String,
-    #[serde(rename = "type")]
 
     /// Device type, block, char, etc.
+    #[serde(rename = "type")]
     pub device_type: String,
 
     /// The device's major number.
