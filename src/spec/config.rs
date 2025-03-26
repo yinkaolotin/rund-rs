@@ -1,3 +1,7 @@
+use crate::internal::common::{Error, ErrorType};
+
+use std::{convert::TryFrom, fs, path::Path};
+
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
@@ -31,6 +35,22 @@ pub struct Spec {
 
     /// Platform-specific configuration for Linux based containers.
     pub linux: Option<Linux>,
+}
+
+impl TryFrom<&Path> for Spec {
+    type Error = Error;
+
+    fn try_from(path: &Path) -> Result<Self, Self::Error> {
+        let json_str = fs::read_to_string(path).map_err(|_| Self::Error {
+            err_type: ErrorType::Runtime,
+            msg: "spec file not found".to_string(),
+        })?;
+        let spec = serde_json::from_str(&json_str).map_err(|_| Self::Error {
+            err_type: ErrorType::Runtime,
+            msg: "failed to deserialise spec from config file".to_string(),
+        })?;
+        Ok(spec)
+    }
 }
 
 /// Hooks specifies a command that is run in the container at a particular event in the lifecycle of a container
