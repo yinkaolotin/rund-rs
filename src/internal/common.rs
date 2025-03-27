@@ -32,8 +32,6 @@ impl std::fmt::Display for Error {
 
 impl std::error::Error for Error {}
 
-// pub type Result<T> = std::result::Result<T, Error>;
-
 pub fn error_and_exit(code: i32, msg: impl Display) -> ! {
     let _ = stdout().write_all(msg.to_string().as_bytes());
     std::process::exit(code);
