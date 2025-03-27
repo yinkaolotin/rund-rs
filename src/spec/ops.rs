@@ -1,4 +1,6 @@
-use std::{fmt, str::FromStr};
+use super::{config::Spec, state::State as StateStruct};
+use std::{fmt, path::Path, str::FromStr};
+use tracing::{error, info};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Operation {
@@ -57,4 +59,20 @@ pub struct Kill {
 
 pub struct Delete {
     pub id: String,
+}
+
+const RUNDRS_ROOT_PATH: &str = "/tmp/rund";
+
+pub fn create(c: Create) {
+    let (container_id, bundle) = (c.id, c.bundle);
+
+    let spec = match Spec::try_from(Path::new(&bundle).join("config.json").as_path()) {
+        Ok(spec) => spec,
+        Err(err) => {
+            error!("{}", err);
+            std::process::exit(1);
+        }
+    };
+
+    let state = StateStruct::new(&container_id, &bundle);
 }
